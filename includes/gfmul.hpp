@@ -1,9 +1,9 @@
-#ifndef GF_MUL
-#define GF_MUL
+#ifndef GFMUL_H
+#define GFMUL_H
 
 /* Galois Field Multiplication Lookup Table */
 
-static const unsigned char gf_mul_table[15][256] = {
+static const unsigned char GF_MUL_TABLE[15][256] = {
     {}, {},
 
     {0x00, 0x02, 0x04, 0x06, 0x08, 0x0a, 0x0c, 0x0e, 0x10, 0x12, 0x14, 0x16,
@@ -154,14 +154,14 @@ static const unsigned char gf_mul_table[15][256] = {
 
 /* Circulant MDS matrix */
 
-const unsigned char cmds[4][4] = {
+const unsigned char CMDS[4][4] = {
     {2, 3, 1, 1},
     {1, 2, 3, 1}, 
     {1, 1, 2, 3}, 
     {3, 1, 1, 2}
 };
 
-const unsigned char inv_cmds[4][4] = {
+const unsigned char INV_CMDS[4][4] = {
     {14, 11, 13, 9},
     {9, 14, 11, 13},
     {13, 9, 14, 11},
