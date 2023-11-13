@@ -36,3 +36,46 @@ AES::~AES() { }
 
 /* Public Interface Function Implementations */
 
+typename AES::byte*         AES::encrypt(byte *plaintext, byte *key)
+{
+    unsigned int    len = check_length(plaintext);
+    byte            *ciphertext = new byte[len];
+    byte            *round_keys = new byte[4 * NUM_COL * (num_rounds + 1)];
+
+    key_expansion(key, round_keys);
+    for (unsigned int i = 0; i < len; i += AES::BLOCK_SIZE)
+        encrypt_block(plaintext + i, ciphertext + i, round_keys);
+
+    delete[] round_keys;
+    return ciphertext;
+}
+
+
+/* Private Util Functon Implementations */
+
+unsigned int                AES::check_length(byte *text)
+{
+    unsigned int len = 0;
+    while (text[len] != '\0')
+        len++;
+
+    if (len % AES::BLOCK_SIZE != 0)
+        throw std::length_error("Plaintext must be devisible by " 
+                +  std::to_string(AES::BLOCK_SIZE));
+
+    return (len);
+}
+
+void                        AES::key_expansion(const byte *key, byte *w)
+{
+   //TODO: to be implemented 
+}
+
+
+
+
+
+
+
+
+
