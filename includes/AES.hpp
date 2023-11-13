@@ -5,7 +5,7 @@
 #include "gfmul.hpp"
 
 #include <vector>
-#include <string>
+#include <cstring>
 #include <stdexcept>
 
 
@@ -39,8 +39,8 @@ class AES
 
         /* Public Interface Functions */
 
-        byte*           encrypt(byte *plaintext, byte *key);  // ECB Mode
-        byte*           decrypt(byte *ciphertext, byte *key); // ECB Mode
+        byte*           encrypt(byte *plaintext, byte *key, unsigned int len);  // ECB Mode
+        byte*           decrypt(byte *ciphertext, byte *key, unsigned int len); // ECB Mode
 
         void            print_hex(byte *a);
 
@@ -67,10 +67,10 @@ class AES
         void            add_round_key(byte state[4][NUM_COL], byte *key);
         void            key_expansion(const byte *key, byte *w);
 
-        void            encrypt_block(const byte *in, byte *out, byte *key);
-        void            decrypt_block(const byte *in, byte *out, byte *key);
+        void            encrypt_block(const byte *in, byte *out, byte *round_keys);
+        void            decrypt_block(const byte *in, byte *out, byte *round_keys);
 
-        unsigned int    check_length(byte *text);
+        void            check_length(unsigned int len);
 };
 
 #endif
