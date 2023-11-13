@@ -57,9 +57,12 @@ class AES
         void            mix_columns(byte state[4][NUM_COL]);
         void            inv_mix_columns(byte state[4][NUM_COL]);
 
-        void            sub_word(byte *a);
-        void            rot_word(byte *a);
+        void            sub_word(byte *word);
+        void            rot_word(byte *word);
         void            xor_words(byte *a, byte *b, byte *c);
+
+        byte            x_mult(byte b);
+        void            round_const(byte *word, unsigned int n);
 
         void            add_round_key(byte state[4][NUM_COL], byte *key);
         void            key_expansion(const byte *key, byte *w);
@@ -67,7 +70,6 @@ class AES
         void            encrypt_block(const byte *in, byte *out, byte *key);
         void            decrypt_block(const byte *in, byte *out, byte *key);
 
-        byte            mult(byte b);
         unsigned int    check_length(byte *text);
 };
 
