@@ -30,8 +30,8 @@ class AES
 
         explicit AES(const AESKeyLen key_len = AESKeyLen::AES_256);
 
-        AES(const AES& src);
         AES& operator=(const AES& src);
+        AES(const AES& src);
 
         ~AES();
 
