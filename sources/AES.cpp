@@ -53,6 +53,94 @@ typename AES::byte*         AES::encrypt(byte *plaintext, byte *key)
 
 /* Private Util Functon Implementations */
 
+void                        AES::sub_word(byte *word)
+{
+    for (int i = 0; i < 4; i++)
+        word[i] = SBOX[word[i] / 16][word[i] % 16];
+}
+
+void                        AES::rot_word(byte *word)
+{
+    byte temp = word[0];
+
+    word[0] = word[1];
+    word[1] = word[2];
+    word[2] = word[3];
+    word[3] = temp;
+}
+
+void                        AES::xor_words(byte *a, byte *b, byte *c)
+{
+    for (int i = 0; i < 4; i++)
+        c[i] = a[i] ^ b[i];
+}
+
+typename AES::byte          AES::x_mult(byte b)
+{
+    return (b << 1) ^ (((b >> 7) & 1) * 0x1b);
+}
+
+void                        AES::round_const(byte *word, unsigned int n)
+{
+    unsigned char c = 1;
+
+    for (unsigned int i = 0; i < n - 1; i++)
+        c = x_mult(c);
+
+    word[0] = c;
+    word[1] = word[2] = word[3] = 0;
+}
+
+
+void                        AES::key_expansion(const byte *key, byte *w)
+{
+  unsigned char word[4];    // 32-bit word
+  unsigned char rcon[4];    // round constants
+  unsigned int  i = 0;
+  
+  // copying the original key 
+ 
+  while (i < num_words * 4)
+  {
+      w[i] = key[i];
+      i++;
+  }
+
+  // key expansion loop
+
+  i = 4 * num_words;
+  while (i < 4 * NUM_COL * (num_rounds + 1))
+  {
+      // temporary word update
+
+      word[0] = w[i - 4 + 0];
+      word[1] = w[i - 4 + 1];
+      word[2] = w[i - 4 + 2];
+      word[3] = w[i - 4 + 3];
+
+      // round constant update
+
+      if (i / 4 % num_words == 0) 
+      {
+          rot_word(word);
+          sub_word(word);
+          round_const(rcon, i / (num_words * 4));
+          xor_words(word, rcon, word);
+      }
+      else if (num_words > 6 && i / 4 % num_words == 4)
+          sub_word(word);
+
+      // expanded key update
+      
+      w[i + 0] = w[i + 0 - 4 * num_words] ^ word[0];
+      w[i + 1] = w[i + 1 - 4 * num_words] ^ word[1];
+      w[i + 2] = w[i + 2 - 4 * num_words] ^ word[2];
+      w[i + 3] = w[i + 3 - 4 * num_words] ^ word[3];
+
+      i += 4;
+  }
+}
+
 unsigned int                AES::check_length(byte *text)
 {
     unsigned int len = 0;
@@ -65,13 +153,6 @@ unsigned int                AES::check_length(byte *text)
 
     return (len);
 }
-
-void                        AES::key_expansion(const byte *key, byte *w)
-{
-   //TODO: to be implemented 
-}
-
-
 
 
 
