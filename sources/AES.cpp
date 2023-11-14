@@ -1,7 +1,12 @@
 #include "AES.hpp"
 #include <iostream>
 
-/* Constructors & Destructor Implementations */
+/*
+    ===================================
+        Constructors and Destructor
+    ===================================
+*/
+
 
 AES::AES(const AESKeyLen key_len)
 {
@@ -35,7 +40,12 @@ AES::AES(const AES& src) { *this = src; }
 AES::~AES() { }
 
 
-/* Public Interface Function Implementations */
+/*
+    ==================================
+        Public Interface Functions
+    ==================================
+*/
+
 
 typename AES::byte*         AES::encrypt(byte *plaintext, byte *key, unsigned int len)
 {
@@ -54,8 +64,29 @@ typename AES::byte*         AES::encrypt(byte *plaintext, byte *key, unsigned in
     return ciphertext;
 }
 
+typename AES::byte*         AES::decrypt(byte *ciphertext, byte *key, unsigned int len)
+{
+    check_length(len);
 
-/* Private Util Functon Implementations */
+    byte            *plaintext = new byte[len];
+    byte            *round_keys = new byte[4 * NUM_COL * (num_rounds + 1)];
+
+    key_expansion(key, round_keys);
+    for (unsigned int i = 0; i < len; i += AES::BLOCK_SIZE)
+    {
+        decrypt_block(ciphertext + i, plaintext + i, round_keys);
+    }
+
+    delete[] round_keys;
+    return plaintext;
+}
+
+
+/*
+    ==============================
+        Private Util Functions
+    ==============================
+*/
 
 void                        AES::sub_bytes(byte state[4][NUM_COL])
 {
@@ -67,6 +98,18 @@ void                        AES::sub_bytes(byte state[4][NUM_COL])
         }
 }
 
+
+void                        AES::inv_sub_bytes(byte state[4][NUM_COL])
+{
+    for (unsigned int i = 0; i < 4; i++)
+        for (unsigned int j = 0; j < NUM_COL; j++)
+        {
+            byte temp = state[i][j];
+            state[i][j] = INV_SBOX[temp / 16][temp % 16];
+        }
+}
+
+
 void                        AES::shift_row(byte state[4][NUM_COL], unsigned int rpos, unsigned int n)
 {
     byte    temp[NUM_COL];
@@ -77,12 +120,22 @@ void                        AES::shift_row(byte state[4][NUM_COL], unsigned int 
     memcpy(state[rpos], temp, AES::BLOCK_SIZE / 4);
 }
 
+
 void                        AES::shift_rows(byte state[4][NUM_COL])
 {
     shift_row(state, 1, 1);
     shift_row(state, 2, 2);
     shift_row(state, 3, 3);
 }
+
+
+void                        AES::inv_shift_rows(byte state[4][NUM_COL])
+{
+    shift_row(state, 1, NUM_COL - 1);
+    shift_row(state, 2, NUM_COL - 2);
+    shift_row(state, 3, NUM_COL - 3);
+}
+
 
 void                        AES::mix_columns(byte state[4][NUM_COL])
 {
@@ -105,11 +158,30 @@ void                        AES::mix_columns(byte state[4][NUM_COL])
         memcpy(state[i], temp_state[i], 4);
 }
 
+
+void                        AES::inv_mix_columns(byte state[4][NUM_COL])
+{
+    byte    temp_state[4][NUM_COL];
+
+    for (size_t i = 0; i < 4; i++)
+        memset(temp_state[i], 0, 4);
+
+    for (size_t i = 0; i < 4; i++)
+        for (size_t k = 0; k < 4; k++)
+            for (size_t j = 0; j < 4; j++)
+                    temp_state[i][j] ^= GF_MUL_TABLE[INV_CMDS[i][k]][state[k][j]];
+
+    for (size_t i = 0; i < 4; i++)
+        memcpy(state[i], temp_state[i], 4);
+}
+
+
 void                        AES::sub_word(byte *word)
 {
     for (int i = 0; i < 4; i++)
         word[i] = SBOX[word[i] / 16][word[i] % 16];
 }
+
 
 void                        AES::rot_word(byte *word)
 {
@@ -150,6 +222,7 @@ void            AES::add_round_key(byte state[4][NUM_COL], byte *key)
             state[i][j] = state[i][j] ^ key[i + 4 * j];
 }
 
+/* IMPORTANT:   MAIN UTIL FUNCTIONS */
 
 void                        AES::key_expansion(const byte *key, byte *w)
 {
@@ -231,9 +304,43 @@ void                        AES::encrypt_block(const byte *in, byte *out, byte *
     
     for (unsigned int i = 0; i < 4; i++)
         for (unsigned int j = 0; j < NUM_COL; j++)
-            out[i + 4 * j] = state[i][j];
-
+            out[i + (4 * j)] = state[i][j];
 }
+
+
+void                        AES::decrypt_block(const byte *in, byte *out, byte *round_keys)
+{
+    byte            state[4][NUM_COL];
+
+    // initialize the state
+
+    for (unsigned int i = 0; i < 4; i++)
+        for (unsigned int j = 0; j < NUM_COL; j++)
+            state[i][j] = in[i + (4 * j)];
+
+    add_round_key(state, round_keys + (num_rounds * 4 * NUM_COL));
+
+    // decryption loop
+
+    for (unsigned int round = num_rounds - 1; round >= 1; round--)
+    {
+        inv_sub_bytes(state);
+        inv_shift_rows(state);
+        add_round_key(state, round_keys + round * 4 * NUM_COL);
+        inv_mix_columns(state);
+    }
+    
+    inv_sub_bytes(state);
+    inv_shift_rows(state);
+    add_round_key(state, round_keys);
+
+    // copy the state in output
+    
+    for (unsigned int i = 0; i < 4; i++)
+        for (unsigned int j = 0; j < NUM_COL; j++)
+            out[i + (4 * j)] = state[i][j];
+}
+
 
 void                        AES::check_length(unsigned int len)
 {
