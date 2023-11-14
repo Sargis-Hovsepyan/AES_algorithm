@@ -81,6 +81,12 @@ typename AES::byte*         AES::decrypt(byte *ciphertext, byte *key, unsigned i
     return plaintext;
 }
 
+void                        AES::print_hex(byte *a, unsigned int n)
+{
+    for (unsigned int i = 0; i < n; i++)
+        printf("%02x ", a[i]);
+    printf("\n");
+}
 
 /*
     ==============================
