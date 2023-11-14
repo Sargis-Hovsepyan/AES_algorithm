@@ -18,7 +18,8 @@ enum class AESKeyLen
 
 class AES 
 {
-    typedef unsigned char           byte;
+    public:
+        typedef unsigned char           byte;
 
     private:
         static const unsigned int   NUM_COL = 4;
@@ -42,7 +43,7 @@ class AES
         byte*           encrypt(byte *plaintext, byte *key, unsigned int len);  // ECB Mode
         byte*           decrypt(byte *ciphertext, byte *key, unsigned int len); // ECB Mode
 
-        void            print_hex(byte *a);
+        void            print_hex(byte *a, unsigned int n);
 
     private:
         /* Private Util Functions */
