@@ -35,8 +35,9 @@ This library does not provide any padding because padding is not part of AES sta
 
 ## Development
 
- For getting the code in local do `git clone https://github.com/Sargis-Hovsepyan/AES_algorithm
-.git`
-The library of AES is in the folder of includes under `includes/AES.hpp` and the implementation is in sources folder under `sources/AES.cpp`.
+For getting the code in local do 
+`git clone https://github.com/Sargis-Hovsepyan/AES_algorithm.git`
 
-The main file runst some simple tests that can be found in `includes/aes_tests.hpp`
+The library of AES is in the folder of includes under `includes/AES.hpp` and the 
+implementation is in sources folder under `sources/AES.cpp`. The main file runst some 
+simple tests that can be found in `includes/aes_tests.hpp`
