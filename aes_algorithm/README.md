@@ -1,4 +1,4 @@
-# AUA CS 215 Project... AES Algorithm Implementation
+# AES Algorithm Implementation
 
 This project aims to provide a comprehensive and efficient implementation of the 
 Advanced Encryption Standard (AES) algorithm in C++. AES is a widely used symmetric 
