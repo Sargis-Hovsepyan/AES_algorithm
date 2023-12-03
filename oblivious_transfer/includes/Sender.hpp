@@ -21,10 +21,13 @@ class Sender
 
         /* Public Interface Functions */
 
-        vector<size_t>      send_public_key();
-        pair                send_random_messages();
+        vector<size_t>      get_public_key();
+        vector<size_t>      encrypt(const vector<size_t>& data);
 
-        pair                send_choices(vector<size_t>& v);
+        pair                get_random_messages();
+        pair                send(const vector<size_t>& v);
+
+        pair                blind_decrypt(const vector<size_t>& v);
 };
 
 #endif
