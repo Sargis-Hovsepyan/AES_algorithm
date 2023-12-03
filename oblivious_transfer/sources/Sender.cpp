@@ -2,11 +2,14 @@
 
 /* Constructor and Destructor */
 
-Sender::Sender(vector<size_t>& msg_0, vector<size_t>& msg_1, RSA& sender_rsa)
+Sender::Sender(const string& msg_0, const string& msg_1, RSA& sender_rsa)
     : rsa(sender_rsa)
 {
-    this->message_0 = msg_0;
-    this->message_1 = msg_1;
+    for (char c : msg_0)
+        this->message_0.push_back(static_cast<size_t>(c));
+
+    for (char c : msg_1)
+        this->message_1.push_back(static_cast<size_t>(c));
 }
 
 Sender::~Sender() 

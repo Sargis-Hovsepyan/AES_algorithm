@@ -16,7 +16,7 @@ class Sender
     public:
         /* Constructor and Destructor */
 
-        Sender(vector<size_t>& msg_0, vector<size_t>& msg_1, RSA& sender_rsa);
+        Sender(const string& msg_0, const string& msg_1, RSA& sender_rsa);
         ~Sender();
 
         /* Public Interface Functions */

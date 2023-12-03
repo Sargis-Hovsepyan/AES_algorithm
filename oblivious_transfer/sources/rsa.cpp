@@ -54,13 +54,10 @@ typename RSA::vct   RSA::encrypt(const vct& message)
 
 typename RSA::vct   RSA::decrypt(const vct& cipher)
 {
-    string  decrypted;
+    vector<size_t>  decrypted;
 
     for (size_t c : cipher)
-    {
-        size_t m = mod_pow(c, this->d, this->n);
-        decrypted.push_back(static_cast<char>(m));
-    }
+        decrypted.push_back(mod_pow(c, this->d, this->n));
 
     return decrypted;
 }
