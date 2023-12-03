@@ -2,7 +2,7 @@
 
 /* Constructors and Destructor */
 
-rsa::rsa(size_t p, size_t q)
+RSA::RSA(size_t p, size_t q)
 {
     if (!is_prime(p) || !is_prime(q))
         throw std::invalid_argument("The numbers p and q must be prime!");
@@ -20,12 +20,12 @@ rsa::rsa(size_t p, size_t q)
     this->d = mod_inverse(this->e, phi);
 }
 
-rsa::rsa(const rsa& src)
+RSA::RSA(const RSA& src)
 {
     *this = src;
 }
 
-rsa&    rsa::operator=(const rsa& src)
+RSA&    RSA::operator=(const RSA& src)
 {
     this->e = src.e;
     this->d = src.d;
@@ -34,27 +34,25 @@ rsa&    rsa::operator=(const rsa& src)
     return (*this);
 }
 
-rsa::~rsa() {}
+RSA::~RSA() {}
 
 
 /* Public Interface Functions */
 
-typename rsa::vct   rsa::encrypt(const string &message)
+typename RSA::vct   RSA::encrypt(const vct& message)
 {
     vector<size_t>    encrypted;
 
-    for (char c : message)
+    for (size_t c : message)
     {
-        size_t m = static_cast<size_t>(c);
-        size_t cipher = mod_pow(m, this->e, this->n);
-
+        size_t cipher = mod_pow(c, this->e, this->n);
         encrypted.push_back(cipher);
     }
 
     return encrypted;
 }
 
-string              rsa::decrypt(const vector<size_t>& cipher)
+typename RSA::vct   RSA::decrypt(const vct& cipher)
 {
     string  decrypted;
 
@@ -67,7 +65,7 @@ string              rsa::decrypt(const vector<size_t>& cipher)
     return decrypted;
 }
 
-typename rsa::vct   rsa::get_public_key()
+typename RSA::vct   RSA::get_public_key()
 {
     vector<size_t>    key;
 
@@ -79,7 +77,7 @@ typename rsa::vct   rsa::get_public_key()
 
 /* Private Util Functions */
 
-bool                rsa::is_prime(size_t n)
+bool                RSA::is_prime(size_t n)
 {
     if (n <= 1) return false;
     if (n == 2) return true;
@@ -91,7 +89,7 @@ bool                rsa::is_prime(size_t n)
     return true;
 }
 
-size_t             rsa::gcd(size_t a, size_t b)
+size_t             RSA::gcd(size_t a, size_t b)
 {
     if (b == 0)
         return a;
@@ -99,7 +97,7 @@ size_t             rsa::gcd(size_t a, size_t b)
     return gcd(b, a % b);
 }
 
-size_t             rsa::mod_inverse(size_t a, size_t m)
+size_t             RSA::mod_inverse(size_t a, size_t m)
 {
     long long m0 = m;
     long long y = 0, x = 1;
@@ -129,7 +127,7 @@ size_t             rsa::mod_inverse(size_t a, size_t m)
 }
 
 
-size_t            rsa::mod_pow(size_t base, size_t exponent, size_t modulus) 
+size_t            RSA::mod_pow(size_t base, size_t exponent, size_t modulus) 
 {
     base %= modulus;
     size_t result = 1;

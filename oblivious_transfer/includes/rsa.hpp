@@ -10,7 +10,7 @@
 using std::string;
 using std::vector;
 
-class rsa 
+class RSA 
 {
     typedef vector<size_t>    vct;
 
@@ -22,17 +22,17 @@ class rsa
     public:
         /* Constructors and Destructor */
 
-        rsa(size_t p, size_t q);
+        RSA(size_t p, size_t q);
 
-        rsa(const rsa& src);
-        rsa&    operator=(const rsa& src);
+        RSA(const RSA& src);
+        RSA&    operator=(const RSA& src);
 
-        ~rsa();
+        ~RSA();
 
         /* Public Interface Functions */
 
-        vct         encrypt(const string& message);
-        string      decrypt(const vct& cipher);
+        vct         encrypt(const vct& message);
+        vct         decrypt(const vct& cipher);
 
         vct         get_public_key();
 
