@@ -6,7 +6,8 @@
 
 class Sender
 {
-    typedef vector<vector<size_t>>  pair;
+    public:
+        typedef vector<vector<size_t>>  pair;
 
     private:
         vector<size_t>  message_0, x_0;
