@@ -12,17 +12,17 @@ using std::vector;
 
 class RSA 
 {
-    typedef vector<size_t>    vct;
+    typedef vector<long long>    vct;
 
     private:
-        size_t    e;
-        size_t    d;
-        size_t    n;
+        long long    e;
+        long long    d;
+        long long    n;
 
     public:
         /* Constructors and Destructor */
 
-        RSA(size_t p, size_t q);
+        RSA(long long p, long long q);
 
         RSA(const RSA& src);
         RSA&    operator=(const RSA& src);
@@ -39,10 +39,12 @@ class RSA
     private:
         /* Private Util Functions */
 
-        bool        is_prime(size_t n);
-        size_t      gcd(size_t a, size_t b);
-        size_t      mod_inverse(size_t a, size_t m);
-        size_t      mod_pow(size_t base, size_t exponent, size_t modulus);
+        bool        is_prime(long long n);
+        long long   gcd(long long a, long long b);
+        
+        long long   mod(long long a, long long m);
+        long long   mod_inverse(long long a, long long m);
+        long long   mod_pow(long long base, long long exponent, long long modulus);
 };
 
 #endif

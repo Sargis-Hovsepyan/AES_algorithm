@@ -6,10 +6,10 @@
 class Receiver
 {
     private:
-        bool            c;
-        vector<size_t>  k;
+        bool                c;
+        vector<long long>   k;
 
-        Sender          s;
+        Sender              s;
 
     public:
         /* Constructor and Destructor */
@@ -19,8 +19,8 @@ class Receiver
 
         /* Public Interface Functions */
 
-        vector<size_t>   blind_encrypt(const vector<size_t>& x_0, const vector<size_t>& x_1);
-        vector<size_t>   receive(const vector<size_t>& m_0, const vector<size_t>& m_1);
+        vector<long long>   blind_encrypt(const vector<long long>& x_0, const vector<long long>& x_1);
+        vector<long long>   receive(const vector<long long>& m_0, const vector<long long>& m_1);
 };
 
 #endif

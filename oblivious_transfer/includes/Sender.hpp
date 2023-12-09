@@ -7,11 +7,11 @@
 class Sender
 {
     public:
-        typedef vector<vector<size_t>>  pair;
+        typedef vector<vector<long long>>  pair;
 
     private:
-        vector<size_t>  message_0, x_0;
-        vector<size_t>  message_1, x_1;
+        vector<long long>  message_0, x_0;
+        vector<long long>  message_1, x_1;
         RSA             rsa;
     
     public:
@@ -22,13 +22,13 @@ class Sender
 
         /* Public Interface Functions */
 
-        vector<size_t>      get_public_key();
-        vector<size_t>      encrypt(const vector<size_t>& data);
+        vector<long long>   get_public_key();
+        vector<long long>   encrypt(const vector<long long>& data);
 
         pair                get_random_messages();
-        pair                send(const vector<size_t>& v);
+        pair                send(const vector<long long>& v);
 
-        pair                blind_decrypt(const vector<size_t>& v);
+        pair                blind_decrypt(const vector<long long>& v);
 };
 
 #endif
