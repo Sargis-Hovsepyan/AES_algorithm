@@ -2,17 +2,17 @@
 
 /* Constructors and Destructor */
 
-RSA::RSA(size_t p, size_t q)
+RSA::RSA(long long p, long long q)
 {
     if (!is_prime(p) || !is_prime(q))
         throw std::invalid_argument("The numbers p and q must be prime!");
 
-    size_t phi;
+    long long phi;
     
     this->n = p * q;
     phi = (p - 1) * (q - 1);
 
-    size_t tmp = 2;
+    long long tmp = 2;
     while (tmp < phi && gcd(tmp, phi) != 1)
         tmp++;
 
@@ -39,32 +39,29 @@ RSA::~RSA() {}
 
 /* Public Interface Functions */
 
-typename RSA::vct   RSA::encrypt(const vct& message)
+typename RSA::vct       RSA::encrypt(const vct& message)
 {
-    vector<size_t>    encrypted;
+    vector<long long>    encrypted;
 
-    for (size_t c : message)
-    {
-        size_t cipher = mod_pow(c, this->e, this->n);
-        encrypted.push_back(cipher);
-    }
+    for (long long c : message)
+        encrypted.push_back(mod_pow(c, this->e, this->n));
 
     return encrypted;
 }
 
-typename RSA::vct   RSA::decrypt(const vct& cipher)
+typename RSA::vct       RSA::decrypt(const vct& cipher)
 {
-    vector<size_t>  decrypted;
+    vector<long long>  decrypted;
 
-    for (size_t c : cipher)
+    for (long long c : cipher)
         decrypted.push_back(mod_pow(c, this->d, this->n));
 
     return decrypted;
 }
 
-typename RSA::vct   RSA::get_public_key()
+typename RSA::vct       RSA::get_public_key()
 {
-    vector<size_t>    key;
+    vector<long long>    key;
 
     key.push_back(e);
     key.push_back(n);
@@ -74,7 +71,7 @@ typename RSA::vct   RSA::get_public_key()
 
 /* Private Util Functions */
 
-bool                RSA::is_prime(size_t n)
+bool                    RSA::is_prime(long long n)
 {
     if (n <= 1) return false;
     if (n == 2) return true;
@@ -86,55 +83,41 @@ bool                RSA::is_prime(size_t n)
     return true;
 }
 
-size_t             RSA::gcd(size_t a, size_t b)
+long long               RSA::gcd(long long a, long long b)
 {
     if (b == 0)
         return a;
 
-    return gcd(b, a % b);
+    return gcd(b, mod(a, b));
 }
 
-size_t             RSA::mod_inverse(size_t a, size_t m)
+long long               RSA::mod(long long a, long long b)
 {
-    long long m0 = m;
-    long long y = 0, x = 1;
+    long long res = a % b;
 
-    if (m == 1) return 0;
+    return (res < 0) ? (res + b) : res;
+}
 
-    while (a > 1)
-    {
-        long long q = a / m;
-        long long t = m;
-
-        // m is remainder now, process same as
-        // Euclid's algo
-        m = a % m;
-        a = t;
-        t = y;
-
-        // Update y and x
-        y = x - q * y;
-        x = t;
-    }
-
-    // Make x positive
-    if (x < 0) x += m0;
-
-    return x;
+long long               RSA::mod_inverse(long long a, long long m)
+{
+    a = mod(a, m);
+    if (a <= 1)
+        return a;
+    return mod(((1 - mod_inverse(m%a, a) * m)) / a, m);
 }
 
 
-size_t            RSA::mod_pow(size_t base, size_t exponent, size_t modulus) 
+long long               RSA::mod_pow(long long base, long long exponent, long long modulus) 
 {
-    base %= modulus;
-    size_t result = 1;
+    base = mod(base, modulus);
+    long long result = 1;
 
     while (exponent > 0)
     {
         if (exponent & 1) 
-            result = (result * base) % modulus;
+            result = mod((result * base), modulus);
 
-        base = (base * base) % modulus;
+        base = mod((base * base), modulus);
         exponent >>= 1;
     }
 

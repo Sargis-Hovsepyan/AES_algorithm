@@ -6,10 +6,10 @@ Sender::Sender(const string& msg_0, const string& msg_1, RSA& sender_rsa)
     : rsa(sender_rsa)
 {
     for (char c : msg_0)
-        this->message_0.push_back(static_cast<size_t>(c));
+        this->message_0.push_back(static_cast<long long>(c));
 
     for (char c : msg_1)
-        this->message_1.push_back(static_cast<size_t>(c));
+        this->message_1.push_back(static_cast<long long>(c));
 }
 
 Sender::~Sender() 
@@ -20,19 +20,19 @@ Sender::~Sender()
 
 /* Public Interface Functions */
 
-vector<size_t>              Sender::get_public_key()
+vector<long long>       Sender::get_public_key()
 {
     return this->rsa.get_public_key();
 }
 
-vector<size_t>              Sender::encrypt(const vector<size_t>& data)
+vector<long long>              Sender::encrypt(const vector<long long>& data)
 {
     return rsa.encrypt(data);
 }
 
-typename Sender::pair       Sender::get_random_messages()
+typename Sender::pair   Sender::get_random_messages()
 {
-    vector<vector<size_t>>  messages;
+    vector<vector<long long>>  messages;
 
     for (int i = 0; i < 16; ++i)
     {
@@ -46,15 +46,15 @@ typename Sender::pair       Sender::get_random_messages()
     return messages;
 }
 
-typename Sender::pair       Sender::send(const vector<size_t>& v)
+typename Sender::pair   Sender::send(const vector<long long>& v)
 {
     pair            choices;
     pair            k;
 
     k = blind_decrypt(v);
 
-    vector<size_t> m_0;
-    vector<size_t> m_1;
+    vector<long long> m_0;
+    vector<long long> m_1;
     for (size_t i = 0; i < v.size(); i++)
     {
         m_0.push_back(message_0[i] + k[0][i]);
@@ -67,17 +67,19 @@ typename Sender::pair       Sender::send(const vector<size_t>& v)
     return choices;
 }
 
-typename Sender::pair       Sender::blind_decrypt(const vector<size_t>& v)
+typename Sender::pair   Sender::blind_decrypt(const vector<long long>& v)
 {
     pair            k;
 
-    vector<size_t>  k_0;
-    vector<size_t>  k_1;
+    vector<long long>  k_0;
+    vector<long long>  k_1;
+
     for (size_t i = 0; i < v.size(); i++)
     {
         k_0.push_back(v[i] - x_0[i]);
         k_1.push_back(v[i] - x_1[i]);
     }
+
 
     k_0 = rsa.decrypt(k_0);
     k_1 = rsa.decrypt(k_1);
