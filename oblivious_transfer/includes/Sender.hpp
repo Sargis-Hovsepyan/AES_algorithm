@@ -12,7 +12,7 @@ class Sender
     private:
         vector<long long>  message_0, x_0;
         vector<long long>  message_1, x_1;
-        RSA             rsa;
+        RSA                rsa;
     
     public:
         /* Constructor and Destructor */
