@@ -90,34 +90,33 @@ bool                    RSA::is_prime(long long n)
 
 bool			RSA::miller_rabin_prime(long long n)
 {
-	if (n == 0) return false;
-	if (n == 2) return true;
-	if (n % 2 == 0) return false;
+    if (n == 0) return false;
+    if (n == 2) return true;
+    if (n % 2 == 0) return false;
 	
-	long long d = n - 1;
-	long long r = 0;
-	while (d % 2 == 0)
-		r++, d >>= 1;
+    long long d = n - 1, r = 0;
+    while (d % 2 == 0)
+        r++, d >>= 1;
 
 	// Now take a random integer between [2, n-2] as a
-	for (int loop = 1; loop <= 15; loop++)
-	{
-		long long a = 2 + rand() % (n - 3);
-		long long x = mod_pow(a, d, n);
+    for (int loop = 1; loop <= 15; loop++)
+    {
+        long long a = 2 + rand() % (n - 3);
+        long long x = mod_pow(a, d, n);
 		
-		if (x == 1 || x == (n - 1)) continue; // check again using different a
+        if (x == 1 || x == (n - 1)) continue; // check again using different a
 		
-		long long i;
-		for (i = 1; i < r; i++)
-		{
-			x = (x * x) % n;
-			if (x == (n - 1)) break; // check again using different a
-		}
+        long long i;
+        for (i = 1; i < r; i++)
+        {
+            x = (x * x) % n;
+            if (x == (n - 1)) break; // check again using different a
+        }
 		
-		if(i == r) return false; 
-	}
+        if(i == r) return false; 
+    }
 
-	return true;
+    return true;
 }
 
 long long               RSA::gcd(long long a, long long b)
