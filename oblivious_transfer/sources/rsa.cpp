@@ -2,10 +2,15 @@
 
 /* Constructors and Destructor */
 
-RSA::RSA(long long p, long long q)
+RSA::RSA()
 {
-    if (!is_prime(p) || !is_prime(q))
-        throw std::invalid_argument("The numbers p and q must be prime!");
+    long long p =  rand() % 1000;
+    while (!miller_rabin_prime(p)) 
+        p++;
+
+    long long q = p + 1;
+    while (!miller_rabin_prime(q)) 
+        q++;
 
     long long phi;
     
@@ -81,6 +86,41 @@ bool                    RSA::is_prime(long long n)
         if (n % i == 0) return false;
 
     return true;
+}
+
+bool                    RSA::miller_rabin_prime(long long n)
+{
+    if (n == 0) return false;
+    if (n == 2) return true;
+    if (n % 2 == 0) return false;
+	
+
+    long long d = n - 1;
+    long long r = 0;
+	while (d % 2 == 0)
+		r++, d >>= 1;
+
+    // Now take a random integer between [2, n-2] as a
+    for (int loop = 1; loop <= 15; loop++)
+    {
+        long long a = 2 + rand() % (n - 3);
+		long long x = mod_pow(a, d, n);
+		
+        if (x == 1 || x == (n - 1))
+            continue; // check again using different a
+		
+        long long i;
+		for (i = 1; i < r; i++)
+        {
+			x = (x * x) % n;
+			if (x == (n - 1))break; // check again using different a
+		}
+
+		if(i == r)
+            return false; 
+	}
+
+	return true;
 }
 
 long long               RSA::gcd(long long a, long long b)

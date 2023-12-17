@@ -10,7 +10,7 @@ void    print(vector<long long> v)
 
 int main()
 {
-    RSA         rsa(67, 83);
+    RSA         rsa;
     
     string      message_0 = "First Message!";
     string      message_1 = "Second Message!";

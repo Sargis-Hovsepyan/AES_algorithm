@@ -22,7 +22,7 @@ class RSA
     public:
         /* Constructors and Destructor */
 
-        RSA(long long p, long long q);
+        RSA();
 
         RSA(const RSA& src);
         RSA&    operator=(const RSA& src);
@@ -40,7 +40,9 @@ class RSA
         /* Private Util Functions */
 
         bool        is_prime(long long n);
+        bool        miller_rabin_prime(long long n);
         long long   gcd(long long a, long long b);
+
         
         long long   mod(long long a, long long m);
         long long   mod_inverse(long long a, long long m);
